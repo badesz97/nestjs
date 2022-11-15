@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateCatDto } from './create-cat.dto';
@@ -16,17 +16,28 @@ export class CatsService {
   }
 
   async findAll(): Promise<Cat[]> {
-    return this.catModel.find().exec();
+    return await this.catModel
+      .find()
+      .exec();
   }
 
   async findOne(id: string): Promise<Cat> {
-    return this.catModel.findOne({ _id: id }).exec();
+    try {
+      return await this.catModel
+        .findOne({ _id: id })
+        .exec();
+    } catch (error) {
+      throw new HttpException(`Object with the specified id (${id}) does not exist.`, HttpStatus.NOT_FOUND);
+    }
   }
 
   async delete(id: string) {
-    const deletedCat = await this.catModel
-      .findByIdAndRemove({ _id: id })
-      .exec();
-    return deletedCat;
+    try {
+      return await this.catModel
+        .findByIdAndRemove({ _id: id })
+        .exec();
+    } catch (error) {
+      throw new HttpException(`Object with the specified id (${id}) does not exist.`, HttpStatus.NOT_FOUND);
+    }
   }
 }
