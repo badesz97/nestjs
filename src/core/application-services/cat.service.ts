@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateCatDto } from '../../web/api/dto/create-cat.dto';
+import { CreateCatDto } from 'src/web/dto/create-cat.dto';
 import {
   Cat,
   CatDocument,

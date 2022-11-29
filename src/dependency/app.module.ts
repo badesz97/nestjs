@@ -1,13 +1,32 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { CatModule } from './cat.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import entities from 'src';
+import { UsersModule } from './users.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: +configService.get<number>('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        entities: entities,
+        synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
+    UsersModule,
+    /*
     MongooseModule.forRoot(
       'mongodb+srv://admin:Passw0rd@cluster.3xaqrhv.mongodb.net/test',
     ),
-    CatModule,
+    CatModule,*/
   ],
 })
 export class AppModule {}
