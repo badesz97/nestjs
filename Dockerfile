@@ -1,6 +1,8 @@
-FROM node:16
-WORKDIR /app
+FROM node:16-alpine
+WORKDIR /dist
 COPY package*.json ./
-COPY . .
 RUN npm install 
-CMD ["node", "/project/dist/main.js"]
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["node", "dist/main.js"]
