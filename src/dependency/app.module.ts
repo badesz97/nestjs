@@ -12,7 +12,7 @@ import { UsersModule } from './users.module';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
-        port: +configService.get<number>('DB_PORT'),
+        port: configService.get<number>('DB_PORT'),
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
@@ -22,11 +22,6 @@ import { UsersModule } from './users.module';
       inject: [ConfigService],
     }),
     UsersModule,
-    /*
-    MongooseModule.forRoot(
-      'mongodb+srv://admin:Passw0rd@cluster.3xaqrhv.mongodb.net/test',
-    ),
-    CatModule,*/
   ],
 })
 export class AppModule {}
